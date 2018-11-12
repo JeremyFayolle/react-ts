@@ -1,3 +1,15 @@
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+var path = require('path');
+
+const devRegExp = /^DEV(ELOPMENT)?$/i;
+const prodRegExp = /^PROD(UCTION)?$/i;
+const MODE = prodRegExp.test(process.env['NODE_ENV']) ? 'PRODUCTION' : devRegExp.test(process.env['NODE_ENV']) ? 'DEVELOPMENT' : null;
+if (!MODE) {
+  console.error(new Error('Invalid mode'));
+  process.exit(1);
+}
+
 module.exports = {
     entry: "./src/client/index.tsx",
     output: {
@@ -5,7 +17,18 @@ module.exports = {
         path: __dirname + "/dist/client"
     },
 
-    mode: "development",
+    mode: MODE === 'DEVELOPMENT' ? 'development' : 'production',
+
+    plugins: [
+      ...(
+        MODE === 'DEVELOPMENT' ?
+          [new HtmlWebpackPlugin({template: __dirname + "/src/client/index.ejs", templateParameters: {mode: 'DEVELOPMENT'}})] :
+          []
+      ),
+      new CopyWebpackPlugin([
+        {from: __dirname + "/src/client/index.ejs", to: __dirname + "/dist/client/index.ejs"}
+      ])
+    ],
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
@@ -32,5 +55,17 @@ module.exports = {
     externals: {
         "react": "React",
         "react-dom": "ReactDOM"
+    },
+
+    devServer: {
+      before: devServerApp => {
+        require('./dist/server/index').buildServer().then(serverApp => devServerApp.use(serverApp))
+      },
+      contentBase: path.join(__dirname, '/src/client'),
+      compress: true,
+      port: 9000,
+      open: 'Chrome',
+      watchContentBase: true
     }
+
 };

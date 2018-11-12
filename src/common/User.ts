@@ -7,8 +7,7 @@ export module User {
 }
 
 export interface User {
-  _id?: number;
-  id: number;
+  _id?: string;
   firstName: string;
   lastName: string;
   email: string;

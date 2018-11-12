@@ -1,76 +1,49 @@
-import * as React from "react";
-import User from "../common/User";
-import UserFiltersForm from "./UserFiltersForm";
-import UserForm from "./UserForm";
+import * as React from 'react';
+import User from '../common/User';
+import { flexBox, item } from './App';
 
 export module UserList {
-  export interface Props extends UserFiltersForm.Props {
-    users: User[],
-    onDeleteChange: (e: User) => void
-    onUpdateChange: (e: User) => void
-    onCreateChange: (e: User) => void
-  }
-  export interface State {
-    candidate: User;
+  export interface Props {
+    users: User[];
+    onUpdateChange: (e: User) => void;
+    onDeleteChange: (e: User) => void;
   }
 }
 
-export class UserList extends React.Component<UserList.Props, UserList.State> {
-  constructor(props: UserList.Props) {
-    super(props);
-
-    this.state = {
-      candidate: null!
-    };
-  }
-
-  handleDelete(e: User) {
-    this.props.onDeleteChange(e);
-  }
-
-  handleUpdate(e: User) {
-    this.setState({candidate: e});
-  }
-
-  handleSubmit(mode: UserForm.Mode, candidate: User) {
-    mode === 'create' ? this.props.onCreateChange(candidate) : this.props.onUpdateChange(candidate);
-    this.setState({candidate: null!});
-  }
-
-  render() {
-    return (
-      <div>
-        <UserFiltersForm onFiltersChange={e => this.props.onFiltersChange(e)} />
-        <UserForm candidate={this.state.candidate} onSubmit={(mode, candidate) => this.handleSubmit(mode, candidate)}/>
-        <table>
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>Prénom</th>
-              <th>Nom</th>
-              <th>Email</th>
-              <th>Genre</th>
-              <th>adresse ip</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.users.map(user => (
-              <tr>
-                <td>{user.id}</td>
+export function UserList (props: UserList.Props) {
+  return (
+    <div>
+      <table className="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Genre</th>
+            <th>Adresse ip</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            props.users ? props.users.map(user => (
+              <tr key={user._id}>
                 <td>{user.firstName}</td>
                 <td>{user.lastName}</td>
                 <td>{user.email}</td>
                 <td>{user.gender}</td>
                 <td>{user.ipAddress}</td>
-                <button onClick={e => this.handleUpdate(user)}>Modifier</button>
-                <button onClick={e => this.handleDelete(user)}>Supprimer</button>
+                <td style={flexBox}>
+                  <button style={item} className="button is-link" onClick={e => props.onUpdateChange(user)}>Modifier</button>
+                  <button style={item} className="button is-danger" onClick={e => props.onDeleteChange(user)}>Supprimer</button>
+                </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
+            )) : null
+          }
+        </tbody>
+      </table>
+    </div>
+  )
 }
 
 export default UserList;

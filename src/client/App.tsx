@@ -1,11 +1,25 @@
 import * as React from 'react';
-import UserList from './UserList';
+import { Provider } from 'react-redux'
 import User, { UserFilters } from '../common/User';
+import { Store } from 'redux';
+import { StoreState, StoreSyncAction } from './store';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import UserPage from './UserPage';
+import UserForm from './UserForm';
 
-export class App extends React.Component<{}, {
-  data: User[],
-  userCandidate: UserFilters}> {
-  constructor(props: {}) {
+export module App {
+  export interface Props {
+    store: Store<StoreState, StoreSyncAction>
+  }
+
+  export interface State {
+    data: User[],
+    userCandidate: UserFilters
+  }
+}
+
+export class App extends React.Component<App.Props, App.State> {
+  constructor(props: App.Props) {
     super(props);
 
     this.state = {
@@ -14,69 +28,30 @@ export class App extends React.Component<{}, {
     };
   }
 
-  componentDidMount() {
-    fetch('/api/users')
-      .then(response => response.json())
-      .then(
-        data => {
-          this.setState({data});
-        },
-        err => console.error(err)
-      );
-  }
-
-  handleUserFiltersChange(e: UserFilters) {
-    fetch('/api/users' + (e.lastName !== '' ? '?lastName=' + e.lastName : ''))
-      .then(response => response.json())
-      .then(
-        data => this.setState({data}),
-        err => console.error(err)
-      );
-  }
-
-  handleUserFormChange(e: User) {
-    fetch('/api/users', {
-      method: 'POST',
-      headers: {'Accept': 'application/json','Content-Type': 'application/json'},
-      body: JSON.stringify(e)})
-      .then(response => response.json())
-      .then(
-        data => this.setState({data}),
-        err => console.error(err)
-      );
-  }
-
-  handleUserUpdateChange(e: User) {
-    fetch('/api/users/'+e._id, {
-      method: 'PUT',
-      headers: {'Accept': 'application/json','Content-Type': 'application/json'},
-      body: JSON.stringify(e)})
-      .then(response => response.json())
-      .then(
-        data => this.setState({data}),
-        err => console.error(err)
-      );
-  }
-
-  handleUserDeleteChange(e: User) {
-    fetch('/api/users/'+e._id, {method: 'DELETE'})
-      .then(response => response.json())
-      .then(
-        data => this.setState({data}),
-        err => console.error(err)
-      );
-  }
-
   render() {
     return (
-      <UserList
-        users={this.state.data}
-        onFiltersChange={e => this.handleUserFiltersChange(e)}
-        onCreateChange={e => this.handleUserFormChange(e)}
-        onUpdateChange={e => this.handleUserUpdateChange(e)}
-        onDeleteChange={e => this.handleUserDeleteChange(e)} />
+      <Provider store={this.props.store}>
+        <Router>
+          <div style={content}>
+            <Route path="/" exact component={UserPage} />
+            <Route path="/:id" component={UserForm} />
+          </div>
+        </Router>
+      </Provider>
     );
   }
 }
 
 export default App;
+
+export const flexBox = {
+  display: 'flex',
+}
+
+export const item = {
+  margin: '5px'
+}
+
+export const content = {
+  width: '300px'
+}

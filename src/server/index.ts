@@ -1,17 +1,33 @@
-import { createServer } from 'http';
 import { join } from 'path';
 import express = require('express');
 import { initApi } from './api';
 import { MongoClient } from 'mongodb';
+import { readFile } from 'fs';
+import { compile } from 'ejs'
+import { promisify } from 'util';
 
-const url = "mongodb://localhost:27017/";
+const devRegExp = /^DEV(ELOPMENT)?$/i;
+const prodRegExp = /^PROD(UCTION)?$/i;
 
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  const dbo = db.db("node-server");
-  if (err) throw err;
+const SERVER_PORT = process.env['SERVER_PORT'] || '3000';
+const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost:27017/';
+const MODE = prodRegExp.test(process.env['NODE_ENV']!) ? 'PRODUCTION' : devRegExp.test(process.env['NODE_ENV']!) ? 'DEVELOPMENT' : null;
+if (!MODE) {
+  console.error(new Error('Invalid mode'));
+  process.exit(1);
+}
 
-  const app = express();
+
+export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Application> {
+  const readEjsFile = promisify(readFile)(join(__dirname, '../../dist/client/index.ejs'));
+
+  const dbo = (await MongoClient.connect(mongoUrl)).db("node-server");
+  const htmlBuffer = await readEjsFile;
+  const compiled = compile(htmlBuffer.toString());
+
+  const html = compiled({mode: MODE});
+
+  const app: express.Application = express();
 
   app.get('/react.js', (req, res) => {
     res.sendFile(join(__dirname, '../../node_modules/react/umd/react.development.js'));
@@ -27,15 +43,15 @@ MongoClient.connect(url, function(err, db) {
 
   app.use('/api', initApi(dbo));
 
-  app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, '../../src/client/index.html'));
+  app.use((req, res, next) => {
+    if (req.path.includes('.')) return next();
+    res.setHeader('Content-type', 'text/html; charset=utf-8')
+    res.send(html);
   });
 
-  const server = createServer(app);
+  return app;
+}
 
-  const port = 3000;
-
-  server.listen(port, () => console.log("LISTEN SERVER " + port));
-
-  console.log("Database opened!");
-});
+if (process.mainModule && process.mainModule.filename === __filename) {
+  buildServer(MONGO_URL).then((serverApp: express.Application) => serverApp.listen(SERVER_PORT, () => console.log('Listen on ' + SERVER_PORT)))
+}
