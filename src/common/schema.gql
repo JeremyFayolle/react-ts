@@ -1,0 +1,33 @@
+enum Gender {
+  MALE
+  FEMALE
+}
+
+type User {
+  id: ID!
+  firstName: String;
+  lastName: String;
+  name: String;
+  email: String;
+  gender: Gender;
+  ipAddress: String;
+}
+
+type UserCandidate {
+  firstName: String;
+  lastName: String;
+  email: String;
+  gender: Gender;
+  ipAddress: String;
+}
+
+type Query {
+  getUsers(lastName: String): [User]!
+}
+
+type Mutation {
+  createUser(user: User!): User!
+  updateUser(id: ID!, userUpdate: User!): User!
+  deleteUser(id: ID!)
+}
+

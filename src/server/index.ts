@@ -41,7 +41,8 @@ export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Applica
     res.sendFile(join(__dirname, '../../dist/client/bundle.js'));
   });
 
-  app.use('/api', initApi(dbo));
+  // app.use('/api', initApi(dbo));
+  app.use('/query', initApi(dbo));
 
   app.use((req, res, next) => {
     if (req.path.includes('.')) return next();
