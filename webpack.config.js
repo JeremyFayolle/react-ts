@@ -1,5 +1,6 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var path = require('path');
 
 const devRegExp = /^DEV(ELOPMENT)?$/i;
@@ -11,10 +12,13 @@ if (!MODE) {
 }
 
 module.exports = {
-    entry: "./src/client/index.tsx",
+    entry: {
+      index: './src/client/index.tsx',
+      styles: './src/client/styles.scss'
+    },
     output: {
-        filename: "bundle.js",
-        path: __dirname + "/dist/client"
+        filename: '[name].js',
+        path: __dirname + '/dist/client'
     },
 
     mode: MODE === 'DEVELOPMENT' ? 'development' : 'production',
@@ -22,29 +26,38 @@ module.exports = {
     plugins: [
       ...(
         MODE === 'DEVELOPMENT' ?
-          [new HtmlWebpackPlugin({template: __dirname + "/src/client/index.ejs", templateParameters: {mode: 'DEVELOPMENT'}})] :
+          [new HtmlWebpackPlugin({template: __dirname + '/src/client/index.ejs', templateParameters: {mode: 'DEVELOPMENT'}})] :
           []
       ),
       new CopyWebpackPlugin([
-        {from: __dirname + "/src/client/index.ejs", to: __dirname + "/dist/client/index.ejs"}
-      ])
+        {from: __dirname + '/src/client/index.ejs', to: __dirname + '/dist/client/index.ejs'}
+      ]),
+      new MiniCssExtractPlugin()
     ],
 
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "source-map",
+    devtool: 'source-map',
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: ['.ts', '.tsx', '.js', '.json']
     },
 
     module: {
         rules: [
             // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-            { test: /\.tsx?$/, loader: "awesome-typescript-loader", options: {configFileName: './src/client/tsconfig.json'} },
+            { test: /\.tsx?$/, loader: 'awesome-typescript-loader', options: {configFileName: './src/client/tsconfig.json'} },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader",  }
+            { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
+            {
+              test: /\.s?css$/,
+              use: [
+                MODE === 'DEVELOPMENT' ? 'style-loader' : MiniCssExtractPlugin.loader,
+                'css-loader',
+                'sass-loader',
+              ],
+            },
         ]
     },
 
@@ -53,8 +66,8 @@ module.exports = {
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
-        "react": "React",
-        "react-dom": "ReactDOM"
+        'react': 'React',
+        'react-dom': 'ReactDOM'
     },
 
     devServer: {

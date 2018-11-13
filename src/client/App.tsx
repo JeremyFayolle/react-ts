@@ -1,11 +1,10 @@
-// TODO - idem
 import * as React from 'react';
 import { Provider } from 'react-redux'
-import User, { UserFilters } from '../common/User';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { Store } from 'redux';
+
+import User, { UserFilters } from '../common/User';
 import { StoreState, StoreSyncAction } from './store';
-// TODO - Remove useless statements
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import UserPage from './UserPage';
 import UserForm from './UserForm';
 
@@ -16,8 +15,7 @@ export module App {
 
   export interface State {
     data: User[],
-    // TODO - The new name doesn't match the type.
-    userCandidate: UserFilters
+    userFilters: UserFilters
   }
 }
 
@@ -25,11 +23,7 @@ export class App extends React.Component<App.Props, App.State> {
   constructor(props: App.Props) {
     super(props);
 
-    // TODO - Single line
-    this.state = {
-      data: [],
-      userCandidate: {}
-    };
+    this.state = { data: [], userFilters: {} };
   }
 
   // TODO - Type the return;
@@ -39,7 +33,7 @@ export class App extends React.Component<App.Props, App.State> {
     return (
       <Provider store={this.props.store}>
         <Router>
-          <div style={content}>
+          <div className="content">
             <Route path="/" exact component={UserPage} />
             <Route path="/:id" component={UserForm} />
           </div>

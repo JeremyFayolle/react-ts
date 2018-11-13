@@ -46,7 +46,11 @@ export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Applica
 
   app.get('/bundle.js', (req, res) => {
     // TODO - idem
-    res.sendFile(join(__dirname, '../../dist/client/bundle.js'));
+    res.sendFile(join(__dirname, '../../dist/client/index.js'));
+  });
+
+  app.get('/main.css', (req, res) => {
+    res.sendFile(join(__dirname, '../../dist/client/styles.css'));
   });
 
   app.use('/api', initApi(dbo));

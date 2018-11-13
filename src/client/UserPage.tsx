@@ -2,7 +2,7 @@ import * as React from 'react';
 import User, { UserFilters } from '../common/User';
 import { StoreState, StoreDispatch, RefreshUsersStoreAction, StoreAsyncAction, StoreActionType } from './store';
 import { connect } from 'react-redux';
-import { getUsers, removeUser } from './api';
+import { Api } from './api';
 import { Link, Redirect } from 'react-router-dom';
 import UserList from './UserList';
 import { UserFiltersForm } from './UserFiltersForm';
@@ -56,7 +56,7 @@ export class UserPage extends React.Component<UserPage.Props, UserPage.State> {
 function getUsersWithFilters(): StoreAsyncAction<RefreshUsersStoreAction> {
   // TODO - Replace with a lambda
   return function (dispatch: StoreDispatch<RefreshUsersStoreAction>, getState: () => StoreState) {
-    return getUsers(getState().userFilters).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}));
+    return Api.getUsers(getState().userFilters).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}));
   }
 }
 
@@ -69,7 +69,7 @@ const mapDispatchToProps = (dispatch: StoreDispatch) => ({
     dispatch({type: StoreActionType.ADD_USER_FILTERS, data})
   },
   removeUser: (user: User) => {
-     return removeUser(user).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
+     return Api.removeUser(user).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
   }
 })
 ​

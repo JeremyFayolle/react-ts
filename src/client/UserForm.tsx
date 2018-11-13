@@ -2,7 +2,7 @@
 import * as React from 'react';
 import User from '../common/User';
 import { StoreDispatch, StoreActionType, StoreState } from './store';
-import { createUser, editUser } from './api';
+import { Api } from './api';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { flexBox, item } from './App';
@@ -119,10 +119,10 @@ const mapStateToProps = ({users}: StoreState) => ({users});
 
 const mapDispatchToProps = (dispatch: StoreDispatch) => ({
   createUser: (candidate: User) => {
-    createUser(candidate).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
+    Api.createUser(candidate).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
   },
   updateUser: (user: User) => {
-    editUser(user).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
+    Api.editUser(user).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
   }
 })
 

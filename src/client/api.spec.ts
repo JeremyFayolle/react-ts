@@ -1,11 +1,12 @@
-import { getUsers } from './api';
+import { Api } from './api';
+import * as fetchMock from 'jest-fetch-mock';
 
-// TODO - Describe text must be the name of a file or a module
-describe('Test api', () => {
-  // TODO - Describe the function then test some of its capabilities
-  test('Check the getUsers function return not null', () => {
-      // TODO - Use toBeDefined
-      // TODO - Don't test the result but the promised result
-      expect(getUsers({})).not.toEqual(null);
-  });
+describe('api.ts', () => {
+  (global as any).fetch = fetchMock;
+
+  describe('getUsers()', () => {
+    test('Check the getUsers function return not null', () => {
+      return Api.getUsers({}).then(users => expect(users).toBeDefined);
+    });
+  })
 });
