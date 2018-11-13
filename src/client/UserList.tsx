@@ -1,3 +1,4 @@
+// TODO - idem
 import * as React from 'react';
 import User from '../common/User';
 import { flexBox, item } from './App';
@@ -10,6 +11,8 @@ export module UserList {
   }
 }
 
+// TODO - remove space after function name
+// TODO - fix indent
 export function UserList (props: UserList.Props) {
   return (
     <div>

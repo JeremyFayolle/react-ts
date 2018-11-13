@@ -1,3 +1,4 @@
+// TODO - idem
 import * as React from 'react';
 import User from '../common/User';
 import { StoreDispatch, StoreActionType, StoreState } from './store';
@@ -7,6 +8,7 @@ import { Redirect, RouteComponentProps } from 'react-router';
 import { flexBox, item } from './App';
 
 export module UserForm {
+  // TODO - Remove comments
   // export type Mode = 'create' | 'update';
 
   export interface Props extends RouteComponentProps {
@@ -16,9 +18,11 @@ export module UserForm {
   }
 
   export interface State {
+    // TODO - idem
     // input: User,
     candidate: User;
     redirect: boolean;
+    // TODO - idem
     // mode: UserForm.Mode
   }
 }
@@ -34,6 +38,7 @@ export class UserForm extends React.Component<UserForm.Props, UserForm.State> {
     }
   }
 
+  // TODO - idem
   // static getDerivedStateFromProps(nextProps: UserForm.Props, {input}: UserForm.State) {
   //   if (nextProps.candidate === input) return;
   //   return !nextProps.candidate ?
@@ -41,6 +46,7 @@ export class UserForm extends React.Component<UserForm.Props, UserForm.State> {
   //     {input: nextProps.candidate, mode: 'update', candidate: {...nextProps.candidate}};
   // }
 
+  // TODO - Type return
   handleInputChange(key: string, event: React.ChangeEvent<HTMLInputElement>|React.ChangeEvent<HTMLSelectElement>) {
     const value = event.target.value;
     this.setState(
@@ -48,6 +54,8 @@ export class UserForm extends React.Component<UserForm.Props, UserForm.State> {
     );
   }
 
+  // TODO - idem
+  // TODO - type the argument
   handleSubmit(e: any) {
     e.preventDefault();
     this.props.user ? this.props.updateUser(this.state.candidate) : this.props.createUser(this.state.candidate);
@@ -57,10 +65,14 @@ export class UserForm extends React.Component<UserForm.Props, UserForm.State> {
     });
   }
 
+  // TODO - idem
   render() {
     const { redirect } = this.state;
-
+    // TODO - Wrap your JSX statements in brackets
     if (redirect) return <Redirect to='/'/>;
+    // TODO - idem
+    // TODO - Extends bulma class in CSS instead of declare useless class
+    // TODO - The column must be defined in CSS
     return (
       <form className="field" onSubmit={e => this.handleSubmit(e)}>
         <p className="title is-4">{this.props.user ? 'Mettre à jour' : 'Création'}</p>

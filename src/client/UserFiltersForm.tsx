@@ -1,5 +1,7 @@
+// TODO - idem
 import * as React from 'react';
 import { UserFilters } from '../common/User';
+// TODO - idem
 import { StoreState, StoreDispatch, StoreActionType, StoreSyncAction } from './store';
 import { connect } from 'react-redux';
 
@@ -10,11 +12,15 @@ export module UserFiltersForm {
   }
 }
 
+// TODO - Name semantically;
 const test = {
   display: 'relative'
 }
 
 export function UserFiltersForm(props: UserFiltersForm.Props) {
+  // TODO - idem
+  // TODO - Be consistant in template breaklines
+  // TODO - Remove evalutions from template
   return (
     <form className="field">
       <p className="title is-4">Filtre : </p>

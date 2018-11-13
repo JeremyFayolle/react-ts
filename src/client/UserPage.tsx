@@ -32,6 +32,8 @@ export class UserPage extends React.Component<UserPage.Props, UserPage.State> {
   render() {
     const { redirectId } = this.state;
 
+    // TODO - idem
+    // TODO - single line
     if (redirectId) {
       return <Redirect to={"/" + redirectId}/>;
     }
@@ -50,7 +52,9 @@ export class UserPage extends React.Component<UserPage.Props, UserPage.State> {
   }
 }
 
+// TODO - Be consistant with function declarations
 function getUsersWithFilters(): StoreAsyncAction<RefreshUsersStoreAction> {
+  // TODO - Replace with a lambda
   return function (dispatch: StoreDispatch<RefreshUsersStoreAction>, getState: () => StoreState) {
     return getUsers(getState().userFilters).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}));
   }
@@ -69,6 +73,7 @@ const mapDispatchToProps = (dispatch: StoreDispatch) => ({
   }
 })
 ​
+// TODO - Add trailing spaces for interface
 export const EnhancedUserPage = connect<{ users: User[], filters: UserFilters }, { refreshUsers(): void}, {}, StoreState>(
   mapStateToProps,
   mapDispatchToProps

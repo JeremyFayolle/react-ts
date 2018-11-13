@@ -10,6 +10,7 @@ const devRegExp = /^DEV(ELOPMENT)?$/i;
 const prodRegExp = /^PROD(UCTION)?$/i;
 
 const SERVER_PORT = process.env['SERVER_PORT'] || '3000';
+// TODO - remove trailing slash from url
 const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost:27017/';
 const MODE = prodRegExp.test(process.env['NODE_ENV']!) ? 'PRODUCTION' : devRegExp.test(process.env['NODE_ENV']!) ? 'DEVELOPMENT' : null;
 if (!MODE) {
@@ -21,6 +22,8 @@ if (!MODE) {
 export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Application> {
   const readEjsFile = promisify(readFile)(join(__dirname, '../../dist/client/index.ejs'));
 
+  // TODO - Extract the name of the in a global variable
+  // TODO - Convert double quotes
   const dbo = (await MongoClient.connect(mongoUrl)).db("node-server");
   const htmlBuffer = await readEjsFile;
   const compiled = compile(htmlBuffer.toString());
@@ -30,14 +33,19 @@ export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Applica
   const app: express.Application = express();
 
   app.get('/react.js', (req, res) => {
+    // TODO - Store the buffer content for performances
+    // TODO - Return different bundles observing mode
     res.sendFile(join(__dirname, '../../node_modules/react/umd/react.development.js'));
   });
 
   app.get('/react-dom.js', (req, res) => {
+    // TODO - idem
+    // TODO - idem
     res.sendFile(join(__dirname, '../../node_modules/react-dom/umd/react-dom.development.js'));
   });
 
   app.get('/bundle.js', (req, res) => {
+    // TODO - idem
     res.sendFile(join(__dirname, '../../dist/client/bundle.js'));
   });
 
