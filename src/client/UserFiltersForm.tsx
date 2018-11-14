@@ -12,8 +12,10 @@ export module UserFiltersForm {
 }
 
 export function UserFiltersForm(props: UserFiltersForm.Props): JSX.Element {
+  // TODO - Don't assign undefined but null
   const lastName = props.filters && props.filters.lastName || undefined;
 
+  // TODO - Remove trailing space
   return (
     <form className="field">
       <p className="title is-4">Filtre : </p>

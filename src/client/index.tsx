@@ -5,6 +5,7 @@ import { Api } from './api';
 import App from './App';
 import { buildStore, StoreState } from './store';
 
+// TODO - Fix indent
 const storeStateRehydratation: StoreState = localStorage.getItem('storeState') ?
   JSON.parse(localStorage.getItem('storeState')!) :
   {};

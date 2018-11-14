@@ -12,17 +12,20 @@ export function initApi(dbo: Db): express.Router {
     const query = {
       ...(req.query['lastName'] && regexp.test(req.query['lastName']) ? {lastName: {$regex: `.*${req.query['lastName']}.*`}} : {})
     }
+    // TODO - Use the Promise signature instead of callback;
     dbo.collection('users').find(query).toArray((err, result) => res.send(result));
   });
 
   router.post('/users', (req, res) => {
     dbo.collection('users').insertOne(req.body, () => {
+      // TODO - idem
       dbo.collection('users').find({}).toArray((err, result) => res.send(result));
     });
   });
 
   router.delete('/users/:id', (req, res) => {
     dbo.collection('users').deleteMany({_id: new ObjectId(req.params.id)}, () => {
+      // TODO - idem
       dbo.collection('users').find({}).toArray((err, result) => res.send(result));
     });
   });
@@ -30,6 +33,7 @@ export function initApi(dbo: Db): express.Router {
   router.put('/users/:id', (req, res) => {
     delete req.body._id;
     dbo.collection('users').updateOne({_id: new ObjectId(req.params.id)}, {$set: req.body}, (err, resu) => {
+      // TODO - idem
       dbo.collection('users').find({}).toArray((err, result) => res.send(result));
     });
   });
