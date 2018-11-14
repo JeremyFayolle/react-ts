@@ -1,30 +1,29 @@
-import { join } from 'path';
-import express = require('express');
-import { initApi } from './api';
-import { MongoClient } from 'mongodb';
-import { readFile } from 'fs';
 import { compile } from 'ejs'
+import express = require('express');
+import { readFile } from 'fs';
+import { MongoClient } from 'mongodb';
+import { join } from 'path';
 import { promisify } from 'util';
+
+import { initApi } from './api';
 
 const devRegExp = /^DEV(ELOPMENT)?$/i;
 const prodRegExp = /^PROD(UCTION)?$/i;
 
 const SERVER_PORT = process.env['SERVER_PORT'] || '3000';
-// TODO - remove trailing slash from url
-const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost:27017/';
+const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost:27017';
 const MODE = prodRegExp.test(process.env['NODE_ENV']!) ? 'PRODUCTION' : devRegExp.test(process.env['NODE_ENV']!) ? 'DEVELOPMENT' : null;
 if (!MODE) {
   console.error(new Error('Invalid mode'));
   process.exit(1);
 }
+const databaseName = 'node-server';
 
 
 export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Application> {
   const readEjsFile = promisify(readFile)(join(__dirname, '../../dist/client/index.ejs'));
 
-  // TODO - Extract the name of the in a global variable
-  // TODO - Convert double quotes
-  const dbo = (await MongoClient.connect(mongoUrl)).db("node-server");
+  const dbo = (await MongoClient.connect(mongoUrl)).db(databaseName);
   const htmlBuffer = await readEjsFile;
   const compiled = compile(htmlBuffer.toString());
 
@@ -32,25 +31,33 @@ export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Applica
 
   const app: express.Application = express();
 
+  const reactFile = await promisify(readFile)(join(__dirname, `../../node_modules/react/umd/react.${MODE === 'PRODUCTION' ? 'production.min' : 'development'}.js`));
+  const reactDomFile = await promisify(readFile)(join(__dirname, `../../node_modules/react-dom/umd/react-dom.${MODE === 'PRODUCTION' ? 'production.min' : 'development'}.js`));
+  const bundleFile = await promisify(readFile)(join(__dirname, '../../dist/client/index.js'));
+  const stylesFile = await promisify(readFile)(join(__dirname, '../../dist/client/styles.css'));
+
   app.get('/react.js', (req, res) => {
-    // TODO - Store the buffer content for performances
-    // TODO - Return different bundles observing mode
-    res.sendFile(join(__dirname, '../../node_modules/react/umd/react.development.js'));
+    res.setHeader('Content-type', 'application/javascript')
+    res.write(reactFile);
+    res.end();
   });
 
   app.get('/react-dom.js', (req, res) => {
-    // TODO - idem
-    // TODO - idem
-    res.sendFile(join(__dirname, '../../node_modules/react-dom/umd/react-dom.development.js'));
+    res.setHeader('Content-type', 'application/javascript')
+    res.write(reactDomFile);
+    res.end();
   });
 
   app.get('/bundle.js', (req, res) => {
-    // TODO - idem
-    res.sendFile(join(__dirname, '../../dist/client/index.js'));
+    res.setHeader('Content-type', 'application/javascript')
+    res.write(bundleFile);
+    res.end();
   });
 
   app.get('/main.css', (req, res) => {
-    res.sendFile(join(__dirname, '../../dist/client/styles.css'));
+    res.setHeader('Content-type', 'text/css')
+    res.write(stylesFile);
+    res.end();
   });
 
   app.use('/api', initApi(dbo));

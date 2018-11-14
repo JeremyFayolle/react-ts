@@ -6,7 +6,6 @@ import { Api } from './api';
 import { Link, Redirect } from 'react-router-dom';
 import UserList from './UserList';
 import { UserFiltersForm } from './UserFiltersForm';
-import { flexBox, item } from './App';
 
 export module UserPage {
   export interface Props {
@@ -32,19 +31,15 @@ export class UserPage extends React.Component<UserPage.Props, UserPage.State> {
   render() {
     const { redirectId } = this.state;
 
-    // TODO - idem
-    // TODO - single line
-    if (redirectId) {
-      return <Redirect to={"/" + redirectId}/>;
-    }
+    if (redirectId) return (<Redirect to={"/" + redirectId}/>);
     return (
       <div>
         <UserFiltersForm
           filters={this.props.filters}
           addUserFilters={(key: string, e: React.ChangeEvent<HTMLInputElement>) => this.props.addFilters(key, e)}/>
-        <div style={flexBox}>
-          <button style={item} className="button is-link" onClick={() => this.props.refreshUsers()}>Charger</button>
-          <Link style={item} className="button is-success" to='/create'>Créer</Link>
+        <div className="flexBox">
+          <button className="item button is-link" onClick={() => this.props.refreshUsers()}>Charger</button>
+          <Link className="item button is-success" to='/create'>Créer</Link>
         </div>
         <UserList users={this.props.users} onUpdateChange={user => this.setState({redirectId: user._id || null!})} onDeleteChange={user => this.props.removeUser(user)}/>
       </div>
@@ -52,10 +47,8 @@ export class UserPage extends React.Component<UserPage.Props, UserPage.State> {
   }
 }
 
-// TODO - Be consistant with function declarations
-function getUsersWithFilters(): StoreAsyncAction<RefreshUsersStoreAction> {
-  // TODO - Replace with a lambda
-  return function (dispatch: StoreDispatch<RefreshUsersStoreAction>, getState: () => StoreState) {
+const getUsersWithFilters = (): StoreAsyncAction<RefreshUsersStoreAction> => {
+  return (dispatch: StoreDispatch<RefreshUsersStoreAction>, getState: () => StoreState) => {
     return Api.getUsers(getState().userFilters).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}));
   }
 }
@@ -73,8 +66,7 @@ const mapDispatchToProps = (dispatch: StoreDispatch) => ({
   }
 })
 ​
-// TODO - Add trailing spaces for interface
-export const EnhancedUserPage = connect<{ users: User[], filters: UserFilters }, { refreshUsers(): void}, {}, StoreState>(
+export const EnhancedUserPage = connect<{ users: User[], filters: UserFilters }, { refreshUsers(): void }, {}, StoreState>(
   mapStateToProps,
   mapDispatchToProps
 )(UserPage);

@@ -2,13 +2,24 @@
 @import "~bulma/bulma";
 
 .flexBox {
-  display: flex
+  display: flex;
 }
 
 .item {
-  margin: 5px
+  margin: 5px;
 }
 
 .content {
-  width: 300px
+  width: 300px;
+}
+
+label {
+  @extend .label;
+  &:after {
+    content: ' :';
+  }
+}
+
+input {
+  @extend .input;
 }

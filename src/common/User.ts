@@ -1,5 +1,3 @@
-// TODO - Remove useless breakline
-
 export module User {
   export enum Gender {
     Male = "Male",

@@ -1,9 +1,8 @@
-// TODO - idem
 import * as React from 'react';
-import { UserFilters } from '../common/User';
-// TODO - idem
-import { StoreState, StoreDispatch, StoreActionType, StoreSyncAction } from './store';
 import { connect } from 'react-redux';
+
+import { UserFilters } from '../common/User';
+import { StoreState, StoreDispatch, StoreActionType } from './store';
 
 export module UserFiltersForm {
   export interface Props {
@@ -12,23 +11,17 @@ export module UserFiltersForm {
   }
 }
 
-// TODO - Name semantically;
-const test = {
-  display: 'relative'
-}
+export function UserFiltersForm(props: UserFiltersForm.Props): JSX.Element {
+  const lastName = props.filters && props.filters.lastName || undefined;
 
-export function UserFiltersForm(props: UserFiltersForm.Props) {
-  // TODO - idem
-  // TODO - Be consistant in template breaklines
-  // TODO - Remove evalutions from template
   return (
     <form className="field">
       <p className="title is-4">Filtre : </p>
-      <label className="label">
-        Nom :
+      <label>
+        Nom
       </label>
-      <div className="control" style={test}>
-        <input className="input" type="text" placeholder="Nom" value={props.filters && props.filters.lastName || undefined} onChange={e => props.addUserFilters('lastName', e)} />
+      <div className="control">
+        <input type="text" placeholder="Nom" value={lastName} onChange={e => props.addUserFilters('lastName', e)} />
       </div>
     </form>
   )

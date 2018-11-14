@@ -1,8 +1,7 @@
-// TODO - idem
-import User, { UserFilters } from '../common/User';
+import { Store, createStore, compose, applyMiddleware } from 'redux';
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk';
-// TODO - idem
-import { Reducer, Store, createStore, compose, applyMiddleware } from 'redux';
+
+import User, { UserFilters } from '../common/User';
 
 export enum StoreActionType { REFRESH_USERS, ADD_USER_FILTERS };
 
@@ -32,7 +31,6 @@ export function buildStore(initialState: StoreState): Store<StoreState, StoreSyn
         default: return state;
       }
     },
-    // TODO - Remove space when invoking a function
-    chromeDevTools ? compose (applyMiddleware(thunk), chromeDevTools()) : applyMiddleware(thunk)
+    chromeDevTools ? compose(applyMiddleware(thunk), chromeDevTools()) : applyMiddleware(thunk)
   )
 }

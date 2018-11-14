@@ -26,10 +26,7 @@ export class App extends React.Component<App.Props, App.State> {
     this.state = { data: [], userFilters: {} };
   }
 
-  // TODO - Type the return;
-  render() {
-    // TODO - Always prefer CSS to JS for static styles
-    // TODO - The constants used in template must be part of the component
+  render(): JSX.Element {
     return (
       <Provider store={this.props.store}>
         <Router>
@@ -44,16 +41,3 @@ export class App extends React.Component<App.Props, App.State> {
 }
 
 export default App;
-
-// TODO - Remove useless constants
-export const flexBox = {
-  display: 'flex',
-}
-
-export const item = {
-  margin: '5px'
-}
-
-export const content = {
-  width: '300px'
-}

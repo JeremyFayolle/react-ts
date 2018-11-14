@@ -1,13 +1,9 @@
 import { buildStore } from './store';
 
-// TODO - idem
-describe('Test store', () => {
-  // TODO - idem
-  test('Check the store creation return not null', () => {
-    // TODO - Fix indent
-    // TODO - idem
-      expect(buildStore({
-        users: [], userFilters: null!
-      })).not.toEqual(null);
+describe('store.ts', () => {
+  describe('buildStore()', () => {
+    test('Check the store creation return not null', () => {
+      expect(buildStore({users: [], userFilters: null!})).toBeDefined();
+    });
   });
 });
