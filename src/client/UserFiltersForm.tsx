@@ -12,18 +12,16 @@ export module UserFiltersForm {
 }
 
 export function UserFiltersForm(props: UserFiltersForm.Props): JSX.Element {
-  // TODO - Don't assign undefined but null
-  const lastName = props.filters && props.filters.lastName || undefined;
+  const lastName = props.filters && props.filters.lastName || null!;
 
-  // TODO - Remove trailing space
   return (
     <form className="field">
-      <p className="title is-4">Filtre : </p>
+      <p className="title is-4">Filtre :</p>
       <label>
         Nom
       </label>
       <div className="control">
-        <input type="text" placeholder="Nom" value={lastName} onChange={e => props.addUserFilters('lastName', e)} />
+        <input type="text" placeholder="Nom" value={lastName} onChange={e => props.addUserFilters('lastName', e)}/>
       </div>
     </form>
   )

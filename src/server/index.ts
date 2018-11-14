@@ -17,14 +17,13 @@ if (!MODE) {
   console.error(new Error('Invalid mode'));
   process.exit(1);
 }
-// TODO - Use UpperSnakeCase when declare global variables
-const databaseName = 'node-server';
+const DATABASE_NAME = 'node-server';
 
 
 export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Application> {
   const readEjsFile = promisify(readFile)(join(__dirname, '../../dist/client/index.ejs'));
 
-  const dbo = (await MongoClient.connect(mongoUrl)).db(databaseName);
+  const dbo = (await MongoClient.connect(mongoUrl)).db(DATABASE_NAME);
   const htmlBuffer = await readEjsFile;
   const compiled = compile(htmlBuffer.toString());
 
@@ -38,28 +37,24 @@ export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Applica
   const stylesFile = await promisify(readFile)(join(__dirname, '../../dist/client/styles.css'));
 
   app.get('/react.js', (req, res) => {
-    // TODO - Response methods are fluents.
     res.setHeader('Content-type', 'application/javascript')
     res.write(reactFile);
     res.end();
   });
 
   app.get('/react-dom.js', (req, res) => {
-    // TODO - idem
     res.setHeader('Content-type', 'application/javascript')
     res.write(reactDomFile);
     res.end();
   });
 
   app.get('/bundle.js', (req, res) => {
-    // TODO - idem
     res.setHeader('Content-type', 'application/javascript')
     res.write(bundleFile);
     res.end();
   });
 
   app.get('/main.css', (req, res) => {
-    // TODO - idem
     res.setHeader('Content-type', 'text/css')
     res.write(stylesFile);
     res.end();
@@ -69,7 +64,6 @@ export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Applica
 
   app.use((req, res, next) => {
     if (req.path.includes('.')) return next();
-    // TODO - idem
     res.setHeader('Content-type', 'text/html; charset=utf-8')
     res.send(html);
   });

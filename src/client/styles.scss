@@ -15,7 +15,7 @@
 
 label {
   @extend .label;
-  // TODO - Break a line between each declarations (@extend is a declaration)
+
   &:after {
     content: ' :';
   }

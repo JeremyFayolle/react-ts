@@ -1,12 +1,12 @@
-// TODO - Seperate internal and external imports
 import * as React from 'react';
-import User, { UserFilters } from '../common/User';
-import { StoreState, StoreDispatch, RefreshUsersStoreAction, StoreAsyncAction, StoreActionType } from './store';
 import { connect } from 'react-redux';
-import { Api } from './api';
 import { Link, Redirect } from 'react-router-dom';
-import UserList from './UserList';
+
+import User, { UserFilters } from '../common/User';
+import { Api } from './api';
+import { StoreState, StoreDispatch, RefreshUsersStoreAction, StoreAsyncAction, StoreActionType } from './store';
 import { UserFiltersForm } from './UserFiltersForm';
+import UserList from './UserList';
 
 export module UserPage {
   export interface Props {

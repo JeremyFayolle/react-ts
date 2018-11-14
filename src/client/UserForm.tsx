@@ -30,12 +30,9 @@ export class UserForm extends React.Component<UserForm.Props, UserForm.State> {
     }
   }
 
-  // TODO - Edd space arround operator
-  handleInputChange(key: string, event: React.ChangeEvent<HTMLInputElement>|React.ChangeEvent<HTMLSelectElement>): void {
+  handleInputChange(key: string, event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>): void {
     const value = event.target.value;
-    this.setState(
-      state =>( {...state, candidate: {...state.candidate, [key]: value}})
-    );
+    this.setState(state => ({...state, candidate: {...state.candidate, [key]: value}}));
   }
 
   handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
