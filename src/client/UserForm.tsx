@@ -6,26 +6,12 @@ import User from '../common/User';
 import { Api } from './api';
 import { StoreDispatch, StoreActionType, StoreState } from './store';
 
-export module UserForm {
-  export interface Props extends RouteComponentProps {
-    user: User;
-    createUser: (candidate: User) => void;
-    updateUser: (user: User) => void;
-  }
-
-  export interface State {
-    candidate: User;
-    redirect: boolean;
-  }
-}
-
 export class UserForm extends React.Component<UserForm.Props, UserForm.State> {
-
   constructor(props: UserForm.Props) {
     super(props);
 
     this.state = {
-      candidate: props.user || {id: 0, firstName: '', lastName: '', email: '', gender: User.Gender.Male, ipAddress: ''},
+      candidate: props.user || UserForm.defaultCandidate,
       redirect: false
     }
   }
@@ -87,6 +73,21 @@ export class UserForm extends React.Component<UserForm.Props, UserForm.State> {
       </form>
     )
   }
+}
+
+export module UserForm {
+  export interface Props extends RouteComponentProps {
+    user: User;
+    createUser: (candidate: User) => void;
+    updateUser: (user: User) => void;
+  }
+
+  export interface State {
+    candidate: User;
+    redirect: boolean;
+  }
+
+  export const defaultCandidate: User =  {firstName: '', lastName: '', email: '', gender: User.Gender.Male, ipAddress: ''};
 }
 
 const mapStateToProps = ({users}: StoreState) => ({users});

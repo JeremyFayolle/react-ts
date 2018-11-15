@@ -21,7 +21,7 @@ export function UserFiltersForm(props: UserFiltersForm.Props): JSX.Element {
         Nom
       </label>
       <div className="control">
-        <input type="text" placeholder="Nom" value={lastName} onChange={e => props.addUserFilters('lastName', e)}/>
+        <input type="text" placeholder="Nom" value={lastName} onChange={e => props.addUserFilters('lastName', e)} />
       </div>
     </form>
   )

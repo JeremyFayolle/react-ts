@@ -8,17 +8,6 @@ import { StoreState, StoreSyncAction } from './store';
 import UserPage from './UserPage';
 import UserForm from './UserForm';
 
-export module App {
-  export interface Props {
-    store: Store<StoreState, StoreSyncAction>
-  }
-
-  export interface State {
-    data: User[],
-    userFilters: UserFilters
-  }
-}
-
 export class App extends React.Component<App.Props, App.State> {
   constructor(props: App.Props) {
     super(props);
@@ -37,6 +26,17 @@ export class App extends React.Component<App.Props, App.State> {
         </Router>
       </Provider>
     );
+  }
+}
+
+export module App {
+  export interface Props {
+    store: Store<StoreState, StoreSyncAction>
+  }
+
+  export interface State {
+    data: User[],
+    userFilters: UserFilters
   }
 }
 

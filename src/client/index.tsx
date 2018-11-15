@@ -9,9 +9,11 @@ const storeStateRehydratation: StoreState = (
   localStorage.getItem('storeState') ? JSON.parse(localStorage.getItem('storeState')!) : {}
 )
 
-Api.getUsers(storeStateRehydratation.userFilters ? storeStateRehydratation.userFilters : {})
-  .then(users => buildStore({...storeStateRehydratation, users}))
-  .then(store => {
+Api.getUsers(storeStateRehydratation.userFilters ? storeStateRehydratation.userFilters : {}).then(
+  users => {
+    const store = buildStore({...storeStateRehydratation, users});
     store.subscribe(() => localStorage.setItem('storeState', JSON.stringify(store.getState())));
     ReactDOM.render(<App store={store}/>, document.getElementById('app'));
-  });
+  },
+  err => console.error(err)
+);
