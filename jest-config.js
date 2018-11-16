@@ -18,5 +18,6 @@ module.exports = {
   collectCoverage: true,
   globals: {
     'ts-jest': {tsConfig: 'src/client/tsconfig.json'}
-  }
+  },
+  automock: false
 }

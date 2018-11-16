@@ -1,16 +1,8 @@
 import * as React from 'react';
+
 import User from '../common/User';
-import { flexBox, item } from './App';
 
-export module UserList {
-  export interface Props {
-    users: User[];
-    onUpdateChange: (e: User) => void;
-    onDeleteChange: (e: User) => void;
-  }
-}
-
-export function UserList (props: UserList.Props) {
+export function UserList(props: UserList.Props) {
   return (
     <div>
       <table className="table is-fullwidth">
@@ -26,24 +18,34 @@ export function UserList (props: UserList.Props) {
         </thead>
         <tbody>
           {
-            props.users ? props.users.map(user => (
-              <tr key={user._id}>
-                <td>{user.firstName}</td>
-                <td>{user.lastName}</td>
-                <td>{user.email}</td>
-                <td>{user.gender}</td>
-                <td>{user.ipAddress}</td>
-                <td style={flexBox}>
-                  <button style={item} className="button is-link" onClick={e => props.onUpdateChange(user)}>Modifier</button>
-                  <button style={item} className="button is-danger" onClick={e => props.onDeleteChange(user)}>Supprimer</button>
-                </td>
-              </tr>
-            )) : null
+            props.users ?
+              props.users.map(user => (
+                <tr key={user._id}>
+                  <td>{user.firstName}</td>
+                  <td>{user.lastName}</td>
+                  <td>{user.email}</td>
+                  <td>{user.gender}</td>
+                  <td>{user.ipAddress}</td>
+                  <td className="flexBox">
+                    <button className="item button is-link" onClick={() => props.onUpdateChange(user)}>Modifier</button>
+                    <button className="item button is-danger" onClick={() => props.onDeleteChange(user)}>Supprimer</button>
+                  </td>
+                </tr>
+              )) :
+              null
           }
         </tbody>
       </table>
     </div>
   )
+}
+
+export module UserList {
+  export interface Props {
+    users: User[];
+    onUpdateChange: (e: User) => void;
+    onDeleteChange: (e: User) => void;
+  }
 }
 
 export default UserList;

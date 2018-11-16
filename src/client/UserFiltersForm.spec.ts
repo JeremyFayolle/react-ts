@@ -1,10 +1,9 @@
 import { UserFiltersForm } from './UserFiltersForm';
 
-describe('Test UserFiltersForm component', () => {
-  test('Check the component is not null', () => {
-      expect(UserFiltersForm({
-        filters: null!,
-        addUserFilters: () => null!
-      })).not.toEqual(null);
+describe('UserFiltersForm.tsx', () => {
+  describe('UserFiltersForm()', () => {
+    test('Check the component is not null', () => {
+      expect(UserFiltersForm({filters: null!, addUserFilters: () => null!})).toBeDefined();
+    });
   });
 });

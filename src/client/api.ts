@@ -1,27 +1,35 @@
 import User, { UserFilters } from '../common/User';
-import 'isomorphic-fetch';
 
-export function getUsers(filters: UserFilters): Promise<User[]> {
-  return fetch('/api/users' + (filters.lastName ? '?lastName=' + filters.lastName : '')).then(response => response.json())
+export module Api {
+  function request<T>(uri: string, init?: RequestInit): Promise<T> {
+    const url = '//' + window.location.host + '/api' + uri;
+    return fetch(url, init).then(response => response.json())
+  }
+
+  const userUri = '/users';
+
+  export function getUsers(filters: UserFilters): Promise<User[]> {
+    return request(userUri + (filters.lastName ? '?lastName=' + filters.lastName : ''));
+  }
+
+  export function createUser(candidate: User): Promise<User[]> {
+    return request(userUri, {
+      method: 'POST',
+      headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+      body: JSON.stringify(candidate)});
+  }
+
+  export function removeUser(user: User): Promise<User[]> {
+    return request(`${userUri}/${user._id}`, {method: 'DELETE'});
+  }
+
+  export function editUser(user: User): Promise<User[]> {
+    return request(`${userUri}/${user._id}`, {
+      method: 'PUT',
+      headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+      body: JSON.stringify(user)
+    });
+  }
+
 }
 
-export function createUser(candidate: User): Promise<User[]> {
-  return fetch('/api/users', {
-    method: 'POST',
-    headers: {'Accept': 'application/json','Content-Type': 'application/json'},
-    body: JSON.stringify(candidate)})
-    .then(response => response.json(), err => console.error(err))
-}
-
-export function removeUser(user: User): Promise<User[]> {
-  return fetch('/api/users/'+user._id, {method: 'DELETE'})
-    .then(response => response.json(), err => console.error(err))
-}
-
-export function editUser(user: User): Promise<User[]> {
-  return fetch('/api/users/'+user._id, {
-    method: 'PUT',
-    headers: {'Accept': 'application/json','Content-Type': 'application/json'},
-    body: JSON.stringify(user)})
-    .then(response => response.json(), err => console.error(err))
-}

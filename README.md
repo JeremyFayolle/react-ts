@@ -1,8 +1,3 @@
----
-name: README
-route: /
----
-
 # README
 
 ## Installation

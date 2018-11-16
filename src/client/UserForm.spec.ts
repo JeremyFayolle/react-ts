@@ -1,7 +1,8 @@
 import { UserForm } from './UserForm';
 
-describe('Test UserForm component', () => {
-  test('Check the component is not null', () => {
+describe('UserForm.tsx', () => {
+  describe('new UserForm()', () => {
+    test('Check the component is not null', () => {
       expect(new UserForm({
         user: null!,
         createUser: () => null,
@@ -9,6 +10,7 @@ describe('Test UserForm component', () => {
         history: null!,
         location: null!,
         match: null!
-      })).not.toEqual(null);
+      })).toBeDefined();
+    });
   });
 });

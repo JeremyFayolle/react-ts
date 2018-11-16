@@ -1,54 +1,27 @@
 import * as React from 'react';
-import User from '../common/User';
-import { StoreDispatch, StoreActionType, StoreState } from './store';
-import { createUser, editUser } from './api';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
-import { flexBox, item } from './App';
 
-export module UserForm {
-  // export type Mode = 'create' | 'update';
-
-  export interface Props extends RouteComponentProps {
-    user: User;
-    createUser: (candidate: User) => void;
-    updateUser: (user: User) => void;
-  }
-
-  export interface State {
-    // input: User,
-    candidate: User;
-    redirect: boolean;
-    // mode: UserForm.Mode
-  }
-}
+import User from '../common/User';
+import { Api } from './api';
+import { StoreDispatch, StoreActionType, StoreState } from './store';
 
 export class UserForm extends React.Component<UserForm.Props, UserForm.State> {
-
   constructor(props: UserForm.Props) {
     super(props);
 
     this.state = {
-      candidate: props.user || {id: 0, firstName: '', lastName: '', email: '', gender: User.Gender.Male, ipAddress: ''},
+      candidate: props.user || UserForm.defaultCandidate,
       redirect: false
     }
   }
 
-  // static getDerivedStateFromProps(nextProps: UserForm.Props, {input}: UserForm.State) {
-  //   if (nextProps.candidate === input) return;
-  //   return !nextProps.candidate ?
-  //     {input: nextProps.candidate, mode: 'create', candidate: {id: 0, firstName: '', lastName: '', email: '', gender: User.Gender.Male, ipAddress: ''}} :
-  //     {input: nextProps.candidate, mode: 'update', candidate: {...nextProps.candidate}};
-  // }
-
-  handleInputChange(key: string, event: React.ChangeEvent<HTMLInputElement>|React.ChangeEvent<HTMLSelectElement>) {
+  handleInputChange(key: string, event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>): void {
     const value = event.target.value;
-    this.setState(
-      state =>( {...state, candidate: {...state.candidate, [key]: value}})
-    );
+    this.setState(state => ({...state, candidate: {...state.candidate, [key]: value}}));
   }
 
-  handleSubmit(e: any) {
+  handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     this.props.user ? this.props.updateUser(this.state.candidate) : this.props.createUser(this.state.candidate);
     this.setState({
@@ -57,60 +30,74 @@ export class UserForm extends React.Component<UserForm.Props, UserForm.State> {
     });
   }
 
-  render() {
+  render(): JSX.Element {
     const { redirect } = this.state;
-
-    if (redirect) return <Redirect to='/'/>;
+    if (redirect) return (<Redirect to='/'/>);
     return (
       <form className="field" onSubmit={e => this.handleSubmit(e)}>
         <p className="title is-4">{this.props.user ? 'Mettre à jour' : 'Création'}</p>
-        <div style={item}>
-          <label className="label">
-            Prénom :
+        <div className="item">
+          <label>
+            Prénom
           </label>
-          <input className="input" type="text" value={this.state.candidate.firstName} onChange={e => this.handleInputChange('firstName', e)} />
+          <input type="text" value={this.state.candidate.firstName} onChange={e => this.handleInputChange('firstName', e)} />
         </div>
-        <div style={item}>
-          <label className="label">
-            Nom :
+        <div className="item">
+          <label>
+            Nom
           </label>
-          <input className="input" type="text" value={this.state.candidate.lastName} onChange={e => this.handleInputChange('lastName', e)} />
+          <input type="text" value={this.state.candidate.lastName} onChange={e => this.handleInputChange('lastName', e)} />
         </div>
-        <div style={item}>
-          <label className="label">
-            Email :
+        <div className="item">
+          <label>
+            Email
           </label>
-          <input className="input" type="text" value={this.state.candidate.email} onChange={e => this.handleInputChange('email', e)} />
+          <input type="text" value={this.state.candidate.email} onChange={e => this.handleInputChange('email', e)} />
         </div>
-        <div style={item}>
+        <div className="item">
           <select className="select" defaultValue={User.Gender.Female} value={this.state.candidate.gender} onChange={e => this.handleInputChange('gender', e)}>
             <option value={User.Gender.Female}>Female</option>
             <option value={User.Gender.Male}>Male</option>
           </select>
         </div>
-        <div style={item}>
-          <label className="label">
-            Adresse ip :
+        <div className="item">
+          <label>
+            Adresse ip
           </label>
-          <input className="input" type="text" value={this.state.candidate.ipAddress} onChange={e => this.handleInputChange('ipAddress', e)} />
+          <input type="text" value={this.state.candidate.ipAddress} onChange={e => this.handleInputChange('ipAddress', e)} />
         </div>
-        <div style={flexBox}>
-          <button style={item} className="button is-warning" onClick={() => this.setState({redirect: true})}>Annuler</button>
-          <input style={item} className="button is-link" type="submit" value={this.props.user ? 'Modifier' : 'Enregistrer'} />
+        <div className="flexBox">
+          <button className="item button is-warning" onClick={() => this.setState({redirect: true})}>Annuler</button>
+          <input className="item button is-link" type="submit" value={this.props.user ? 'Modifier' : 'Enregistrer'} />
         </div>
       </form>
     )
   }
 }
 
+export module UserForm {
+  export interface Props extends RouteComponentProps {
+    user: User;
+    createUser: (candidate: User) => void;
+    updateUser: (user: User) => void;
+  }
+
+  export interface State {
+    candidate: User;
+    redirect: boolean;
+  }
+
+  export const defaultCandidate: User =  {firstName: '', lastName: '', email: '', gender: User.Gender.Male, ipAddress: ''};
+}
+
 const mapStateToProps = ({users}: StoreState) => ({users});
 
 const mapDispatchToProps = (dispatch: StoreDispatch) => ({
   createUser: (candidate: User) => {
-    createUser(candidate).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
+    Api.createUser(candidate).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
   },
   updateUser: (user: User) => {
-    editUser(user).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
+    Api.editUser(user).then(data => dispatch({type: StoreActionType.REFRESH_USERS, data}))
   }
 })
 
