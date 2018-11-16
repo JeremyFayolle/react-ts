@@ -9,7 +9,6 @@ import UserForm from './UserForm';
 
 export module App {
   export interface Props {
-    store: Store<StoreState, StoreSyncAction>
   }
 
   export interface State {
@@ -30,14 +29,12 @@ export class App extends React.Component<App.Props, App.State> {
 
   render() {
     return (
-      <Provider store={this.props.store}>
-        <Router>
-          <div style={content}>
-            <Route path="/" exact component={UserPage} />
-            <Route path="/:id" component={UserForm} />
-          </div>
-        </Router>
-      </Provider>
+      <Router>
+        <div style={content}>
+          <Route path="/" exact component={UserPage} />
+          <Route path="/:id" component={UserForm} />
+        </div>
+      </Router>
     );
   }
 }

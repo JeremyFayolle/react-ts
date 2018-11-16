@@ -1,6 +1,6 @@
 import { join } from 'path';
 import express = require('express');
-import { initApi } from './api';
+import { initApi } from './apiGraphql';
 import { MongoClient } from 'mongodb';
 import { readFile } from 'fs';
 import { compile } from 'ejs'
@@ -41,8 +41,7 @@ export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Applica
     res.sendFile(join(__dirname, '../../dist/client/bundle.js'));
   });
 
-  // app.use('/api', initApi(dbo));
-  app.use('/query', initApi(dbo));
+  (await initApi(dbo)).applyMiddleware({app});
 
   app.use((req, res, next) => {
     if (req.path.includes('.')) return next();

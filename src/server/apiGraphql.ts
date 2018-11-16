@@ -1,4 +1,4 @@
-import { ApolloServer, gql } from 'apollo-server';
+import { ApolloServer, gql } from 'apollo-server-express';
 import { Db, ObjectId } from 'mongodb';
 import express = require('express');
 import { promisify } from 'util';
@@ -28,23 +28,21 @@ export async function initApi(dbo: Db): Promise<ApolloServer> {
       },
     },
     Mutation: {
-      createUser: (parent: {}, {user}: {user: User}): Promise<User | null> => dbo.collection('users')
-        .insertOne(user)
-        .then(res => dbo.collection('users').find<User>({_id: res.insertedId}).next()),
-      updateUser: (id: string, userUpdate: User): Promise<User | null> => dbo.collection('users')
-        .updateOne({_id: new ObjectId(id)}, { $set: userUpdate})
-        .then(res => dbo.collection('users').find<User>({_id: res.upsertedId}).next()),
-      deleteUser: (id: string) => dbo.collection('users')
-        .deleteMany({_id: new ObjectId(id)}),
+      createUser: (parent: {}, {user}: {user: User}): Promise<User | null> => (
+        dbo.collection('users').insertOne(user).then(res => (
+          dbo.collection('users').findOne<User>({_id: res.insertedId}))
+        )
+      ),
+      updateUser: (parent: {}, {id, userUpdate}: { id: string, userUpdate: User }): Promise<User | null> => (
+        dbo.collection('users').updateOne({_id: new ObjectId(id)}, { $set: userUpdate}).then(res => (
+          dbo.collection('users').findOne<User>({_id: res.upsertedId}))
+        )
+      ),
+      deleteUser: (parent: {}, {id}: { id: string }) => (
+        dbo.collection('users').deleteOne({_id: new ObjectId(id)}).then(({deletedCount}) => deletedCount! > 0)
+      ),
     }
   };
 
-  const server = new ApolloServer({typeDefs, resolvers});
-
-  server.listen().then(({url}) => {
-    console.log(`Server ready at ${url}`);
-  });
-
-  return server;
-
+  return new ApolloServer({typeDefs, resolvers});
 }

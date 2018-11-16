@@ -4,21 +4,21 @@ enum Gender {
 }
 
 type User {
-  id: ID!
-  firstName: String;
-  lastName: String;
-  name: String;
-  email: String;
-  gender: Gender;
-  ipAddress: String;
+  _id: ID!
+  firstName: String
+  lastName: String
+  name: String
+  email: String
+  gender: Gender
+  ipAddress: String
 }
 
-type UserCandidate {
-  firstName: String;
-  lastName: String;
-  email: String;
-  gender: Gender;
-  ipAddress: String;
+input UserCandidate {
+  firstName: String
+  lastName: String
+  email: String
+  gender: Gender
+  ipAddress: String
 }
 
 type Query {
@@ -26,8 +26,8 @@ type Query {
 }
 
 type Mutation {
-  createUser(user: User!): User!
-  updateUser(id: ID!, userUpdate: User!): User!
-  deleteUser(id: ID!)
+  createUser(user: UserCandidate!): User!
+  updateUser(id: ID!, userUpdate: UserCandidate!): User!
+  deleteUser(id: ID!): Boolean!
 }
 
