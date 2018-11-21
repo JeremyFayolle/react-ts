@@ -1,8 +1,14 @@
 import * as React from 'react';
 
 import User from '../common/User';
+import { useQuery, useDeleteUser } from './hooks';
+import gql from 'graphql-tag';
 
-export function UserList(props: UserList.Props) {
+export function UserList() {
+  const {data, refreshData} = useQuery<{getUsers: User[]}>(gql`
+    query {getUsers{_id firstName lastName email gender ipAddress}}
+  `);
+  const {deleteUser} = useDeleteUser();
   return (
     <div>
       <table className="table is-fullwidth">
@@ -18,34 +24,24 @@ export function UserList(props: UserList.Props) {
         </thead>
         <tbody>
           {
-            props.users ?
-              props.users.map(user => (
-                <tr key={user._id}>
+            data ? data.getUsers.map(user => (
+                <tr key={user.firstName}>
                   <td>{user.firstName}</td>
                   <td>{user.lastName}</td>
                   <td>{user.email}</td>
                   <td>{user.gender}</td>
                   <td>{user.ipAddress}</td>
-                  <td className="flexBox">
-                    <button className="item button is-link" onClick={() => props.onUpdateChange(user)}>Modifier</button>
-                    <button className="item button is-danger" onClick={() => props.onDeleteChange(user)}>Supprimer</button>
-                  </td>
+                  {<td className="flexBox">
+                    {/* <button className="item button is-link" onClick={() => props.onUpdateChange(user)}>Modifier</button> */}
+                    <button className="item button is-danger" onClick={() => {deleteUser(user._id), refreshData()}}>Supprimer</button>
+                  </td>}
                 </tr>
-              )) :
-              null
+              )) : null
           }
         </tbody>
       </table>
     </div>
   )
-}
-
-export module UserList {
-  export interface Props {
-    users: User[];
-    onUpdateChange: (e: User) => void;
-    onDeleteChange: (e: User) => void;
-  }
 }
 
 export default UserList;

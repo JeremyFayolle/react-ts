@@ -1,7 +1,6 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var path = require('path');
+const path = require('path');
 
 const devRegExp = /^DEV(ELOPMENT)?$/i;
 const prodRegExp = /^PROD(UCTION)?$/i;
@@ -29,9 +28,6 @@ module.exports = {
           [new HtmlWebpackPlugin({template: __dirname + '/src/client/index.ejs', templateParameters: {mode: 'DEVELOPMENT'}})] :
           []
       ),
-      new CopyWebpackPlugin([
-        {from: __dirname + '/src/client/index.ejs', to: __dirname + '/dist/client/index.ejs'}
-      ]),
       new MiniCssExtractPlugin()
     ],
 
@@ -71,14 +67,15 @@ module.exports = {
     },
 
     devServer: {
-      before: devServerApp => {
+      after: devServerApp => {
         require('./dist/server/index').buildServer().then(serverApp => devServerApp.use(serverApp))
       },
       contentBase: path.join(__dirname, '/src/client'),
       compress: true,
       port: 9000,
       open: 'Chrome',
-      watchContentBase: true
+      watchContentBase: true,
+      historyApiFallback: true
     }
 
 };

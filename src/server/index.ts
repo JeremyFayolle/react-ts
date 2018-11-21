@@ -13,7 +13,7 @@ const prodRegExp = /^PROD(UCTION)?$/i;
 
 const SERVER_PORT = process.env['SERVER_PORT'] || '3000';
 const MONGO_URL = process.env['MONGO_URL'] || 'mongodb://localhost:27017';
-const MODE = prodRegExp.test(process.env['NODE_ENV']!) ? 'PRODUCTION' : devRegExp.test(process.env['NODE_ENV']!) ? 'DEVELOPMENT' : null;
+const MODE = prodRegExp.test(process.env['NODE_ENV']) ? 'PRODUCTION' : devRegExp.test(process.env['NODE_ENV']) ? 'DEVELOPMENT' : null;
 if (!MODE) {
   console.error(new Error('Invalid mode'));
   process.exit(1);
@@ -22,7 +22,7 @@ const DATABASE_NAME = 'node-server';
 
 
 export async function buildServer(mongoUrl = MONGO_URL): Promise<express.Application> {
-  const readEjsFile = promisify(readFile)(join(__dirname, '../../dist/client/index.ejs'));
+  const readEjsFile = promisify(readFile)(join(__dirname, '../../dist/server/index.ejs'));
 
   const dbo = (await MongoClient.connect(mongoUrl)).db(DATABASE_NAME);
   const htmlBuffer = await readEjsFile;

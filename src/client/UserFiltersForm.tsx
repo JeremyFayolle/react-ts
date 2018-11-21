@@ -12,7 +12,7 @@ export module UserFiltersForm {
 }
 
 export function UserFiltersForm(props: UserFiltersForm.Props): JSX.Element {
-  const lastName = props.filters && props.filters.lastName || null!;
+  const lastName = props.filters && props.filters.lastName || null;
 
   return (
     <form className="field">
@@ -27,18 +27,5 @@ export function UserFiltersForm(props: UserFiltersForm.Props): JSX.Element {
   )
 }
 
-const mapStateToProps = (state: StoreState) => ({filters: state.userFilters});
-​
-const mapDispatchToProps = (dispatch: StoreDispatch) => ({
-  addUserFilters: (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
-    const data = {[key]: e.target.value};
-    dispatch({type: StoreActionType.ADD_USER_FILTERS, data})
-  }
-});
 
-export const EnhancedUserFiltersForm = connect<{ filters: UserFilters }, { addUserFilters(key: string, e: React.ChangeEvent<HTMLInputElement>): void }, {}, StoreState>(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserFiltersForm);
-
-export default EnhancedUserFiltersForm;
+export default UserFiltersForm;

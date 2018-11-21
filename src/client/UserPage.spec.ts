@@ -5,8 +5,8 @@ describe('UserPage.ts', () => {
     test('Check the component is not null', () => {
       expect(new UserPage({
         users: [],
-        filters: null!,
-        refreshUsers: () => null!,
+        filters: null,
+        refreshUsers: () => null,
         addFilters: () => null,
         removeUser: () => null
       })).toBeDefined();

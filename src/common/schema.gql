@@ -27,7 +27,7 @@ type Query {
 
 type Mutation {
   createUser(user: UserCandidate!): User!
-  updateUser(id: ID!, userUpdate: UserCandidate!): User!
-  deleteUser(id: ID!): Boolean!
+  updateUser(_id: ID!, userUpdate: UserCandidate!): User!
+  deleteUser(_id: ID!): Boolean!
 }
 

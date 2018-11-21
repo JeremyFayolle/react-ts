@@ -16,6 +16,7 @@ export async function initApi(dbo: Db): Promise<ApolloServer> {
 
   const resolvers = {
     User: {
+      _id: (parent: User): string => parent._id.toString(),
       name: (parent: User): string => `${parent.firstName} ${parent.lastName}`
     },
     Query: {
@@ -33,13 +34,13 @@ export async function initApi(dbo: Db): Promise<ApolloServer> {
           dbo.collection('users').findOne<User>({_id: res.insertedId}))
         )
       ),
-      updateUser: (parent: {}, {id, userUpdate}: { id: string, userUpdate: User }): Promise<User | null> => (
-        dbo.collection('users').updateOne({_id: new ObjectId(id)}, { $set: userUpdate}).then(res => (
+      updateUser: (parent: {}, {_id, userUpdate}: { _id: string, userUpdate: User }): Promise<User | null> => (
+        dbo.collection('users').updateOne({_id: new ObjectId(_id)}, { $set: userUpdate}).then(res => (
           dbo.collection('users').findOne<User>({_id: res.upsertedId}))
         )
       ),
-      deleteUser: (parent: {}, {id}: { id: string }) => (
-        dbo.collection('users').deleteOne({_id: new ObjectId(id)}).then(({deletedCount}) => deletedCount! > 0)
+      deleteUser: (parent: {}, {_id}: { _id: string }) => (
+        dbo.collection('users').deleteOne({_id: new ObjectId(_id)}).then(({deletedCount}) => deletedCount > 0)
       ),
     }
   };

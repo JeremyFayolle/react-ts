@@ -4,9 +4,10 @@
   "description": "",
   "main": "dist/server/index.js",
   "scripts": {
-    "server:build": "npm run server:clean && npm run server:compile",
+    "server:build": "npm run server:clean && npm run server:pre && npm run server:compile",
     "server:clean": "rimraf dist/server/*",
     "server:compile": "tsc -p ./src/server",
+    "server:pre": "cp src/client/index.ejs dist/server && cp src/common/schema.gql dist/common",
     "server:serve": "NODE_ENV=PROD node dist/server/index.js",
     "start": "npm run client:build && npm run server:build && npm run server:serve",
     "client:build": "npm run client:pre:clean && npm run client:compile && npm run client:post:clean",
@@ -35,7 +36,7 @@
     "mongodb": "^3.1.8",
     "react-apollo": "^2.3.1",
     "react-redux": "^5.1.0",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^4.4.0-beta.6",
     "redux-thunk": "^2.3.0",
     "style-loader": "^0.23.1"
   },

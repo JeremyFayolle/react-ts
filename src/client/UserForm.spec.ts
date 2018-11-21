@@ -4,12 +4,12 @@ describe('UserForm.tsx', () => {
   describe('new UserForm()', () => {
     test('Check the component is not null', () => {
       expect(new UserForm({
-        user: null!,
+        user: null,
         createUser: () => null,
         updateUser: () => null,
-        history: null!,
-        location: null!,
-        match: null!
+        history: null,
+        location: null,
+        match: null
       })).toBeDefined();
     });
   });

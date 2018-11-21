@@ -1,6 +1,14 @@
 
 export interface User {
-  _id?: string;
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  gender: User.Gender;
+  ipAddress: string;
+}
+
+export interface UserCandidate {
   firstName: string;
   lastName: string;
   email: string;
@@ -10,8 +18,8 @@ export interface User {
 
 export module User {
   export enum Gender {
-    Male = 'Male',
-    Female = 'Female'
+    Male = 'MALE',
+    Female = 'FEMALE'
   }
 }
 
